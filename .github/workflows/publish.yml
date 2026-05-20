@@ -19,6 +19,7 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
+      - run: npm install -g npm@latest
       - run: npm ci
       - run: npm test
       - run: npm run build
