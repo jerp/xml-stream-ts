@@ -1,6 +1,6 @@
 {
   "name": "@jerp/xml-stream-ts",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A small streaming XML parser for TypeScript.",
   "type": "module",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "prepublishOnly": "npm run build && npm test"
   },
   "devDependencies": {
-    "typescript": "~5.9.3",
+    "typescript": "~6.0.3",
     "vitest": "^4.1.0"
   },
   "publishConfig": {

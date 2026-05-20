@@ -1,7 +1,7 @@
 import { TagNameMatcher, AttributeNameMatcher, NamespaceMap } from "./names.ts"
 import type { FQName, Namespace } from "./names.ts"
 
-type AttributePropertyName<Name extends string> = Name extends `${string}:${infer LocalName}` ? LocalName : Name
+// type AttributePropertyName<Name extends string> = Name extends `${string}:${infer LocalName}` ? LocalName : Name
 
 type OnStartHandler<T = any, AK extends string = any> = (
   this: T,
@@ -11,7 +11,8 @@ type OnStartHandler<T = any, AK extends string = any> = (
 ) => boolean | void
 
 export type TagAttributes<AK extends string = string> = {
-  [P in AttributePropertyName<AK>]?: Uint8Array<ArrayBuffer>;
+  [P in AK]?: Uint8Array<ArrayBuffer>;
+  // [P in AttributePropertyName<AK>]?: Uint8Array<ArrayBuffer>;
 }
 
 export interface TagAttribute<AK extends string = string> {

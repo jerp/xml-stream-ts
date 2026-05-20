@@ -8,39 +8,6 @@ interface CaptureFn {
   (...args: any[]): void
 }
 
-// class TagAttributeBuilder {
-//   private attributeNames: string[] = [];
-//   private names: FQName[] = [];
-//   private values: any[] = [];
-//   push(fqName: FQName, value: Uint8Array<ArrayBuffer>) {
-//     this.attributeNames.push(fqName.name)
-//     this.names.push(fqName)
-//     this.values.push(value)
-//   }
-//   getProxy(): TagAttributes {
-//     const { attributeNames, names, values } = this
-//     return new Proxy({} as TagAttributes, {
-//       get(_, prop) {
-//         if (typeof prop === 'string') {
-//           const index = attributeNames.indexOf(prop)
-//           if (index !== -1) {
-//             return values[index]
-//           }
-//         } else if (prop === Symbol.iterator) {
-//           return function* () {
-//             for (let i = 0; i < attributeNames.length; i++) {
-//               const fqName = names[i]
-//               yield { name: fqName.name, value: values[i], namespace: fqName.namespace }
-//             }
-//           }
-//         }
-//         return undefined
-//       }
-//     })
-//   }
-// }
-
-
 class XMLTransformStream<T extends any = any> implements TransformStream<Uint8Array<ArrayBuffer>, T> {
   readonly readable: ReadableStream<T>;
   readonly writable: WritableStream<Uint8Array<ArrayBuffer>>;
@@ -309,7 +276,8 @@ export function createParser<
       const namespace = attOffset.prefixLength !== undefined ? nsMap.resolveNamespace(bytes, attOffset.prefixBegin!, attOffset.prefixLength) : PREDEFINED_XML_NAMESPACE
       const fqName = attributeNames.find(bytes, attOffset.nameBegin, attOffset.nameLength, namespace)
       if (!fqName) continue
-      attributes[fqName.name] = attOffset.value
+      const attributeName = fqName.namespace && fqName.namespace !== PREDEFINED_XML_NAMESPACE ? `${fqName.namespace}:${fqName.name}` : fqName.name
+      attributes[attributeName] = attOffset.value
     }
     return attributes
   }

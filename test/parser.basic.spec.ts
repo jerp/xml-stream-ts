@@ -135,7 +135,7 @@ describe('xml-stream-ts basic behavior', () => {
 
     const nsMap = NamespaceMap.create({ '': 'urn:book', xml: 'http://www.w3.org/XML/1998/namespace' })
     const root = rootResolver<BookContext>()('book', nsMap, {
-      attributes: ['xml:lang'] as const,
+      attributes: ['lang'] as const,
       onStart(attributes) {
         this.lang = stringTextContent(attributes.lang)
       },
@@ -224,6 +224,33 @@ describe('xml-stream-ts basic behavior', () => {
     })
 
     const xml = '<payload xmlns="urn:events"><debug><trace><id>ignore-me</id></trace></debug><event>ORDER_CREATED</event></payload>'
+    const results = await parseXml(root, {}, xml)
+
+    expect(results).toEqual([{ event: 'ORDER_CREATED' }])
+    expect(equals('ORDER_CREATED')(textEncoder.encode(results[0].event ?? ''))).toBe(true)
+  })
+
+  it('can capture attribute with namespace', async () => {
+    type EventContext = { event?: string | null, level?: string | null }
+
+    const nsMap = NamespaceMap.create({ 'ev': 'urn:events' })
+    const root = new TagResolver<EventContext>({
+      onEnd() {
+        return { event: this.event }
+      },
+    }, nsMap, 'payload')
+
+    root.onLeaf('event', {
+      attributes: ['ev:level'] as const,
+      onStart(attributes) {
+        this.level = stringTextContent(attributes['ev:level'])
+      },
+      onTextContent(textContent) {
+        this.event = stringTextContent(textContent)
+      },
+    })
+
+    const xml = '<payload xmlns:ev="urn:events" ev:level="high"><debug><trace><id>ignore-me</id></trace></debug><event>ORDER_CREATED</event></payload>'
     const results = await parseXml(root, {}, xml)
 
     expect(results).toEqual([{ event: 'ORDER_CREATED' }])
