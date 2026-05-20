@@ -7,7 +7,7 @@
   "author": "Jerome",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jerp/xml-stream-ts.git"
+    "url": "https://github.com/jerp/xml-stream-ts"
   },
   "bugs": {
     "url": "https://github.com/jerp/xml-stream-ts/issues"
