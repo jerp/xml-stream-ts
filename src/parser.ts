@@ -276,7 +276,7 @@ export function createParser<
       const namespace = attOffset.prefixLength !== undefined ? nsMap.resolveNamespace(bytes, attOffset.prefixBegin!, attOffset.prefixLength) : PREDEFINED_XML_NAMESPACE
       const fqName = attributeNames.find(bytes, attOffset.nameBegin, attOffset.nameLength, namespace)
       if (!fqName) continue
-      const attributeName = fqName.namespace && fqName.namespace !== PREDEFINED_XML_NAMESPACE ? `${fqName.namespace}:${fqName.name}` : fqName.name
+      const attributeName = fqName.namespace && fqName.namespace !== PREDEFINED_XML_NAMESPACE ? `${fqName.namespace.prefix}:${fqName.name}` : fqName.name
       attributes[attributeName] = attOffset.value
     }
     return attributes
